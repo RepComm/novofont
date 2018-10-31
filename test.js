@@ -10,7 +10,7 @@ NovoFont.fromJson("fonts/repcomm.json", (f)=>{
     someText = new NovoFontText();
 
     //Set the data to display
-    someText.text = "ABCDEFGHIJK";
+    someText.text = "HI!";
 
     //Use a new font info (size of this snippet, font to use)
     someText.fontInfo = new NovoFontInfo();
@@ -20,7 +20,7 @@ NovoFont.fromJson("fonts/repcomm.json", (f)=>{
     //Set the font info's font to the one we just loaded
     someText.fontInfo.font = font;
 
-    renderer.setSize(512, 64);
+    renderer.setSize(1024, 64);
     document.body.appendChild(renderer.canvas);
 
     renderer.texts.push(someText);
