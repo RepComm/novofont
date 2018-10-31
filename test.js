@@ -10,7 +10,7 @@ NovoFont.fromJson("fonts/repcomm.json", (f)=>{
     someText = new NovoFontText();
 
     //Set the data to display
-    someText.text = "HI!";
+    someText.text = "abcdefghijklmnopqrstuvwxyz\nABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     //Use a new font info (size of this snippet, font to use)
     someText.fontInfo = new NovoFontInfo();
@@ -20,7 +20,7 @@ NovoFont.fromJson("fonts/repcomm.json", (f)=>{
     //Set the font info's font to the one we just loaded
     someText.fontInfo.font = font;
 
-    renderer.setSize(1024, 64);
+    renderer.setSize(1024, 256);
     document.body.appendChild(renderer.canvas);
 
     renderer.texts.push(someText);
@@ -60,11 +60,20 @@ document.addEventListener("keydown", (evt)=>{
         case "PrintScreen":
         break;
         case "Delete":
+        first = someText.text.substring(0, renderer.caretInfo.selection.min);
+        last = someText.text.substring(renderer.caretInfo.selection.min+1);
+        someText.text = first + last;
         break;
         case "CapsLock":
         break;
+        case "Enter":
+        first = someText.text.substring(0, renderer.caretInfo.selection.min);
+        last = someText.text.substring(renderer.caretInfo.selection.min);
+        someText.text = first + "\n" + last;
+        renderer.caretInfo.selection.min++;
+        renderer.caretInfo.selection.max = renderer.caretInfo.selection.min;
+        break;
         default:
-        console.log(evt.key);
         first = someText.text.substring(0, renderer.caretInfo.selection.min);
         last = someText.text.substring(renderer.caretInfo.selection.min);
         someText.text = first + evt.key + last;

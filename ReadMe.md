@@ -1,6 +1,8 @@
 # NovoFont
 Work in progress font format using vector graphics
 
+![Image](../blob/master/demo01.png?raw=true)
+
 Most of the HTML and JS here is just to visual/test,
 an implementation of textfield, and textarea will be
 largely based on this code.

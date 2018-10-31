@@ -21,17 +21,20 @@ class NovoFont {
                 if (json.nochar.path) {
                     json.nochar.p2d = new Path2D(json.nochar.path);
                 }
+                NovoFont.loadedFonts[json.name] = json;
                 callback(json);
             });
         });
     }
-    constructor () {
-        this.name = "";
-        this.desc = "";
-        this.chars = {};
-        this.widthmode = "monospace"; //monospace|dynamic
+    constructor (name, desc, chars, widthmode) {
+        this.name = name;
+        this.desc = desc;
+        this.chars = chars;
+        this.widthmode = (widthmode|"monospace"); //monospace|dynamic
+        NovoFont.loadedFonts[this.name] = this;
     }
 }
+NovoFont.loadedFonts = new Object();
 
 class NovoFontText {
     constructor () {
@@ -94,6 +97,7 @@ class NovoFontCanvasRenderer {
         this.context.restore();
 
         this.usedPixelWidth = 0;
+        this.usedPixelHeight = 0;
         this.totalCharOffset = 0;
         for (let text of this.texts) {
             this.renderText(text);
@@ -117,11 +121,15 @@ class NovoFontCanvasRenderer {
             }
 
             char = text.text.charCodeAt(i);
+            if (char === 10) {
+                this.usedPixelWidth = - text.fontInfo.size;
+                this.usedPixelHeight += text.fontInfo.size;
+            }
             charRenderData = text.fontInfo.font.chars[char];
             if (!charRenderData) charRenderData = text.fontInfo.font.nochar;
             if (charRenderData) {
                 this.context.save();
-                this.context.translate(this.usedPixelWidth/text.fontInfo.size, 0);
+                this.context.translate(this.usedPixelWidth/text.fontInfo.size, this.usedPixelHeight/text.fontInfo.size);
 
                 this.context.beginPath();
                 if (this.caretInfo.selection.min === this.caretInfo.selection.max) {
@@ -143,7 +151,12 @@ class NovoFontCanvasRenderer {
                 this.usedPixelWidth += text.fontInfo.size;
                 this.context.restore();
             } else {
-                this.usedPixelWidth += text.fontInfo.size;
+                if (char !== 10) {
+                    this.usedPixelWidth += text.fontInfo.size;
+                } else {
+                    console.log(this.usedPixelWidth);
+                    this.usedPixelWidth = 0;
+                }
             }
         }
 
